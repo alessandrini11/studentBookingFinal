@@ -8,9 +8,14 @@ module.exports = {
         .email()
         .required(),
       password: Joi.string()
-        .required()
-        .min(6)
-        .max(128),
+        .required(),
+      phoneNumber: Joi.number()
+        .required(),
+      firstName: Joi.string()
+        .trim()
+        .required(),
+      lastName: Joi.string()
+        .required(),
     },
   },
 

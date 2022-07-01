@@ -23,6 +23,7 @@ const router = express.Router();
  *
  * @apiParam  {String}          email     User's email
  * @apiParam  {String{6..128}}  password  User's password
+ * @apiParam  {String{6..128}}  firstName  User's firstname
  *
  * @apiSuccess (Created 201) {String}  token.tokenType     Access Token's type
  * @apiSuccess (Created 201) {String}  token.accessToken   Authorization Token

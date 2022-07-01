@@ -32,11 +32,21 @@ const userSchema = new mongoose.Schema({
     minlength: 6,
     maxlength: 128,
   },
-  name: {
+  firstName: {
     type: String,
     maxlength: 128,
     index: true,
     trim: true,
+  },
+  lastName: {
+    type: String,
+    maxlength: 128,
+    index: true,
+    trim: true,
+  },
+  phoneNumber: {
+    type: Number,
+    required: true,
   },
   services: {
     facebook: String,
@@ -50,6 +60,10 @@ const userSchema = new mongoose.Schema({
   picture: {
     type: String,
     trim: true,
+  },
+  isBlock: {
+    type: Boolean,
+    default: false,
   },
 }, {
   timestamps: true,
@@ -82,7 +96,7 @@ userSchema.pre('save', async function save(next) {
 userSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['id', 'name', 'email', 'picture', 'role', 'createdAt'];
+    const fields = ['id', 'email', 'password', 'picture', 'firstName', 'lastName', 'picture', 'role', 'createdAt', 'isBlock'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
@@ -210,18 +224,18 @@ userSchema.statics = {
   },
 
   async oAuthLogin({
-    service, id, email, name, picture,
+    service, id, email, firstName, picture,
   }) {
     const user = await this.findOne({ $or: [{ [`services.${service}`]: id }, { email }] });
     if (user) {
       user.services[service] = id;
-      if (!user.name) user.name = name;
+      if (!user.firstName) user.firstName = firstName;
       if (!user.picture) user.picture = picture;
       return user.save();
     }
     const password = uuidv4();
     return this.create({
-      services: { [service]: id }, email, password, name, picture,
+      services: { [service]: id }, email, password, firstName, picture,
     });
   },
 };
